@@ -30,3 +30,163 @@ This project scrapes danmaku from Bilibili to analyze AI technology applications
 ## Use Cases
 - Study AI technology applications and public feedback during the 2024 Paris Olympics.
 - Learn techniques for data scraping, processing, and visualization.
+  
+# Project Implementation Details
+
+## Project Planning and Development Process
+
+### Project Phases
+1. Requirements Analysis
+   - Understanding task requirements
+   - Defining project scope and features
+   - Planning development approach
+
+2. Technical Research
+   - Researching required APIs
+   - Evaluating necessary Python libraries
+   - Determining optimal implementation methods
+
+3. Implementation
+   - Developing core functionality modules
+   - Building data collection and processing systems
+   - Creating visualization components
+
+4. Testing and Optimization
+   - Conducting code testing
+   - Resolving bugs and exceptions
+   - Implementing performance improvements
+
+5. Results Generation
+   - Creating data visualizations
+   - Generating Excel reports
+   - Producing final analysis results
+
+## Technical Implementation
+
+### Key Technologies Used
+1. Data Collection
+   - Browser Developer Tools
+   - JSON file analysis
+   - Python Regular Expressions
+   - File I/O operations
+
+2. Data Processing
+   - Requests library
+   - Regular Expressions (re)
+   - OpenPyXL
+   - Pandas
+   - Collections
+   - ThreadPoolExecutor
+
+3. Data Visualization
+   - WordCloud
+   - Jieba
+   - ImageIO
+   - Adobe Photoshop
+
+### Performance Optimization
+
+#### Initial Performance Issues
+- API request time: 295 seconds
+- Network requests: 445 seconds
+- Total execution time: 467 seconds
+
+#### Optimization Strategies
+1. Reduced API Call Frequency
+   ```python
+   async def fetch_all_bulletchats(session):
+       all_bulletchats = []
+       tasks = []
+       total_requests = 6 * 50
+       for i in range(total_requests):
+           page_number = i // 50 + 1
+           index = i % 50
+           tasks.append(asyncio.ensure_future(
+               fetch_bulletchat_data(session, page_number, index)))
+       return all_bulletchats
+   ```
+
+2. HTTP Connection Reuse
+   ```python
+   async def fetch_and_save_bulletchat(session, cid):
+       url = tempApi.replace("{number}", str(cid))
+       try:
+           async with session.get(url) as response:
+               response_text = await response.text()
+               data = re.findall('(.*?)', response_text)
+               return data if data else []
+       except:
+           return []
+   ```
+
+3. Asynchronous I/O Implementation
+   ```python
+   async def get_bvid(session, page, index):
+       if (page, index) in bvid_cache:
+           return bvid_cache[(page, index)]
+       url = f'https://api.bilibili.com/x/web-interface/search/type?...'
+       async with session.get(url) as response:
+           try:
+               json_data = await response.json()
+               bvid = json_data['data']['result'][index]['bvid']
+               bvid_cache[(page, index)] = bvid
+               return bvid
+           except Exception as e:
+               print(f"Error getting bvid: {e}")
+               return None
+   ```
+
+4. Caching Implementation
+   ```python
+   # Global cache for bvid and cid
+   bvid_cache = {}
+   cid_cache = {}
+   ```
+
+#### Optimization Results
+- Main program execution time reduced from 467s to 4.07s
+- Data processing time: 3.02s
+- File operations: ~2.11s
+- Network wait time: <1s
+
+## Testing Implementation
+
+### Unit Testing Example
+```python
+@Test
+def testLoginSuccess():
+    # Arrange
+    loginReq = LoginReq("testuser", "testpass")
+    teacher = Teacher()
+    teacher.setId(1L)
+    teacher.setName("John Doe")
+    
+    # Act
+    result = teacherService.login(loginReq)
+    
+    # Assert
+    assertEquals(200, result.getCode())
+```
+
+### Performance Testing
+- Used JProfiler for performance analysis
+- Implemented HTTP request testing
+- Monitored API response times
+- Analyzed memory usage patterns
+
+## Data Analysis and Visualization
+
+### Data Processing Components
+- Text processing using Jieba
+- Image recognition with ImageIO
+- Custom stopwords configuration
+- WordCloud generation settings
+
+### Visualization Interface
+- Time-based data display
+- Score distribution charts
+- Student performance analytics
+- Interactive data filtering
+
+## Conclusion
+The implementation successfully achieved significant performance improvements through optimization techniques and proper component structuring. The system demonstrates robust data handling capabilities and efficient processing of large-scale information.
