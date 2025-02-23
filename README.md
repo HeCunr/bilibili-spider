@@ -30,6 +30,3 @@ This project scrapes danmaku from Bilibili to analyze AI technology applications
 ## Use Cases
 - Study AI technology applications and public feedback during the 2024 Paris Olympics.
 - Learn techniques for data scraping, processing, and visualization.
-
-## Installation and Usage
-- See on master branch
